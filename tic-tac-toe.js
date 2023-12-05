@@ -47,6 +47,10 @@ function GameController() {
       console.log(`${currentPlayer.getPlayerName()} wins!`);
       return;
     }
+    if (checkForTie()) {
+      console.log(`It's a tie! Try again next time.`);
+      return;
+    }
     changeCurrentPlayer();
     printNewRound();
   }
@@ -78,6 +82,13 @@ function GameController() {
     } else {
       return false;
     }
+  }
+
+  const checkForTie = () => {
+    if (board.getBoard().every(token => token != '') === true) {
+      return true;
+    }
+    return false;
   }
 
   printNewRound();
