@@ -35,6 +35,8 @@ function GameController() {
 
   let currentPlayer = playerOne;
 
+  const getCurrentPlayer = () => currentPlayer;
+
   const changeCurrentPlayer = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   }
@@ -102,7 +104,37 @@ function GameController() {
 
   printNewRound();
 
-  return { playRound };
+  return { playRound, getCurrentPlayer, getBoard: board.getBoard };
 }
 
-const myGame = GameController();
+function DisplayController() {
+  const game = GameController();
+  const gameBoardDiv = document.querySelector('.gameBoard');
+  const playerTurnDiv = document.querySelector('.turn');
+
+  const updateDisplay = () => {
+    gameBoardDiv.textContent = "";
+
+    const board = game.getBoard();
+    const currentPlayer = game.getCurrentPlayer();
+
+    playerTurnDiv.textContent = `${currentPlayer.getPlayerName()}'s turn`;
+
+    board.forEach((row, rowIndex) => {
+      row.forEach((column, columnIndex) => {
+        const cellButton = document.createElement('button');
+        cellButton.setAttribute('data-row', rowIndex);
+        cellButton.setAttribute('data-column', columnIndex);
+        cellButton.textContent = column;
+        cellButton.classList.toggle('cellButton');
+        gameBoardDiv.appendChild(cellButton);
+      })
+    })
+
+  }
+
+  updateDisplay();
+  
+}
+
+DisplayController();
