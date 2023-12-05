@@ -43,11 +43,11 @@ function GameController() {
 
   const playRound = (row, column) => {
     board.markBoard(row, column, currentPlayer.getPlayerToken());
-    changeCurrentPlayer();
     if (checkForWinner(currentPlayer.getPlayerToken()) === true) {
       console.log(`${currentPlayer.getPlayerName()} wins!`);
       return;
     }
+    changeCurrentPlayer();
     printNewRound();
   }
 
