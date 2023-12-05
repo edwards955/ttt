@@ -1,14 +1,14 @@
 function GameBoard() {
  const board = [
-  ['', '', ''],
-  ['', '', ''],
-  ['', '', ''],
+  ['X', 'X', ''],
+  ['O', 'O', 'X'],
+  ['X', 'O', 'O'],
  ];
 
  const getBoard = () => board;
  
  const markBoard = (row, column, token) => {
-  if (board[row][column] != '') return;
+  if (board[row][column] !== '') return;
   board[row][column] = token;
  }
 
@@ -85,7 +85,8 @@ function GameController() {
   }
 
   const checkForTie = () => {
-    if (board.getBoard().every(token => token != '') === true) {
+    let currentBoard = board.getBoard().flat();
+    if (currentBoard.every(token => token !== '')) {
       return true;
     }
     return false;
