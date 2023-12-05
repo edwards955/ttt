@@ -1,15 +1,18 @@
 function GameBoard() {
  const board = [
-  ['X', 'X', ''],
-  ['O', 'O', 'X'],
-  ['X', 'O', 'O'],
+  ['', '', ''],
+  ['', '', ''],
+  ['', '', ''],
  ];
 
  const getBoard = () => board;
  
  const markBoard = (row, column, token) => {
-  if (board[row][column] !== '') return;
+  if (board[row][column] !== '') {
+    return false;
+  }
   board[row][column] = token;
+  return true;
  }
 
  const printBoard = () => {
@@ -42,7 +45,12 @@ function GameController() {
   }
 
   const playRound = (row, column) => {
-    board.markBoard(row, column, currentPlayer.getPlayerToken());
+    let correctMove = board.markBoard(row, column, currentPlayer.getPlayerToken());
+    if (correctMove === false) {
+      console.log('Space already filled. Try again.');
+      printNewRound();
+      return;
+    }
     if (checkForWinner(currentPlayer.getPlayerToken()) === true) {
       console.log(`${currentPlayer.getPlayerName()} wins!`);
       return;
