@@ -49,7 +49,7 @@ function GameController() {
   const playRound = (row, column) => {
     let correctMove = board.markBoard(row, column, currentPlayer.getPlayerToken());
     if (correctMove === false) {
-      console.log('Space already filled. Try again.');
+      alert('Space already filled. Try again.');
       printNewRound();
       return;
     }
@@ -125,14 +125,21 @@ function DisplayController() {
         const cellButton = document.createElement('button');
         cellButton.setAttribute('data-row', rowIndex);
         cellButton.setAttribute('data-column', columnIndex);
-        cellButton.textContent = column;
+        cellButton.textContent = `${column}`;
         cellButton.classList.toggle('cellButton');
         gameBoardDiv.appendChild(cellButton);
       })
     })
-
   }
 
+  const boardClickHandler = (e) => {
+    let row = Number(e.target.getAttribute('data-row'));
+    let column = Number(e.target.getAttribute('data-column'));
+    game.playRound(row, column);
+    updateDisplay();
+  }
+
+  gameBoardDiv.addEventListener('click', boardClickHandler);
   updateDisplay();
   
 }
