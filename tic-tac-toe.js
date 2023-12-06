@@ -15,11 +15,7 @@ function GameBoard() {
   return true;
  }
 
- const printBoard = () => {
-  console.log(board);
- }
-
- return { getBoard, markBoard, printBoard };
+ return { getBoard, markBoard };
 }
 
 function Player(name, token) {
@@ -41,28 +37,19 @@ function GameController() {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   }
 
-  const printNewRound = () => {
-    board.printBoard();
-    console.log(`${currentPlayer.getPlayerName()}'s turn`)
-  }
-
   const playRound = (row, column) => {
     let correctMove = board.markBoard(row, column, currentPlayer.getPlayerToken());
     if (correctMove === false) {
-      alert('Space already filled. Try again.');
-      printNewRound();
-      return;
+      return 'badMove';
     }
     if (checkForWinner(currentPlayer.getPlayerToken()) === true) {
-      console.log(`${currentPlayer.getPlayerName()} wins!`);
-      return;
+      return 'win';
     }
     if (checkForTie()) {
-      console.log(`It's a tie! Try again next time.`);
-      return;
+      return 'tie';
     }
     changeCurrentPlayer();
-    printNewRound();
+    return 'continue';
   }
 
   const checkForWinner = token => {
@@ -102,8 +89,6 @@ function GameController() {
     return false;
   }
 
-  printNewRound();
-
   return { playRound, getCurrentPlayer, getBoard: board.getBoard };
 }
 
@@ -112,13 +97,26 @@ function DisplayController() {
   const gameBoardDiv = document.querySelector('.gameBoard');
   const playerTurnDiv = document.querySelector('.turn');
 
-  const updateDisplay = () => {
+  const updateDisplay = (option = 'continue') => {
     gameBoardDiv.textContent = "";
 
     const board = game.getBoard();
     const currentPlayer = game.getCurrentPlayer();
 
-    playerTurnDiv.textContent = `${currentPlayer.getPlayerName()}'s turn`;
+    switch (option) {
+      case 'continue':
+        playerTurnDiv.textContent = `${currentPlayer.getPlayerName()}'s turn`;
+        break;
+      case 'badMove':
+        playerTurnDiv.textContent = `Space already filled. Try again.`;
+        break;
+      case 'tie':
+        playerTurnDiv.textContent = `It's a tie! Try again next time.`;
+        break;
+      case 'win':
+        playerTurnDiv.textContent = `${currentPlayer.getPlayerName()} wins!`;
+        break;
+    }
 
     board.forEach((row, rowIndex) => {
       row.forEach((column, columnIndex) => {
@@ -135,8 +133,8 @@ function DisplayController() {
   const boardClickHandler = (e) => {
     let row = Number(e.target.getAttribute('data-row'));
     let column = Number(e.target.getAttribute('data-column'));
-    game.playRound(row, column);
-    updateDisplay();
+    let option = game.playRound(row, column);
+    updateDisplay(option);
   }
 
   gameBoardDiv.addEventListener('click', boardClickHandler);
