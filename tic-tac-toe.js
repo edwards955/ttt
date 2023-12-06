@@ -29,8 +29,8 @@ function Player(name, token) {
 }
 
 function GameController() {
-  const playerOne = Player('Player One', 'X');
-  const playerTwo = Player('Player Two', 'O');
+  const playerOne = Player(prompt('Enter name for Player One: '), 'X');
+  const playerTwo = Player(prompt('Enter name for Player Two: '), 'O');
   const board = GameBoard();
 
   let currentPlayer = playerOne;
